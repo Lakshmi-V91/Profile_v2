@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    ============================================================
+    PAGE TITLE & FAVICON
+    ============================================================
+    ✏️  EDIT HERE: change the title below to "Your Name — Portfolio"
+    ✏️  EDIT HERE: replace favicon.svg with your own icon later.
+        Any small square SVG or PNG works. Just drop the file in
+        the /images folder and update the href below.
+  -->
+  <title>[Your Name] — Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <meta name="description" content="Personal portfolio of [Your Name], BTech ISE student." />
+
+  <!--
+    FONTS
+    Display font "Fraunces" = warm, characterful serif for headings (the
+    personality of the page). Body font "Plus Jakarta Sans" = clean,
+    rounded geometric sans for readability. Both are variable/multi-weight
+    so the type scale below has real range to work with.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!--
+    ============================================================
+    SCROLL PROGRESS BAR
+    ============================================================
+    A thin bar fixed to the very top of the viewport. Its width is
+    updated by script.js as the user scrolls. Purely decorative /
+    functional — no content to edit here.
+  -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!--
+    ============================================================
+    NAVIGATION
+    ============================================================
+    A minimal sticky nav. On desktop it shows as a horizontal bar.
+    On small screens it collapses behind a hamburger button
+    (see script.js for the toggle logic + style.css for the
+    responsive behaviour). Links smooth-scroll to each section id.
+  -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <!-- ✏️ EDIT HERE: change "YN" to your own initials / wordmark -->
+      <a href="#hero" class="nav__brand">YN<span class="nav__brand-dot">.</span></a>
+
+      <button
+        class="nav__toggle"
+        id="navToggle"
+        aria-expanded="false"
+        aria-controls="navMenu"
+        aria-label="Open navigation menu"
+      >
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
+
+      <ul class="nav__menu" id="navMenu">
+        <li><a href="#skills" class="nav__link">Skills</a></li>
+        <li><a href="#interests" class="nav__link">Interests</a></li>
+        <li><a href="#hobbies" class="nav__link">Hobbies</a></li>
+        <li><a href="#contact" class="nav__link nav__link--cta">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!--
+      ============================================================
+      SECTION 1 — HERO / INTRODUCTION
+      ============================================================
+      Structure note: the name, photo and "BTech.ISE" tagline live
+      inside a single CSS Grid "hero__stage" so the same HTML can
+      restack for mobile. On wide screens the photo sits behind the
+      name (layered with grid-column/grid-row overlap + opacity).
+      On narrow screens the grid collapses to one column and the
+      items simply flow: name → photo → tagline. No JS, no separate
+      markup — just responsive CSS (see style.css, "HERO" block).
+    -->
+    <section class="section hero" id="hero">
+
+      <!-- Decorative floating shapes: purely ambient, aria-hidden.
+           🎨 FUTURE ANIMATION SLOT: give these a slow drift/parallax
+           animation, or swap for hand-drawn SVG illustrations. -->
+      <div class="hero__decor" aria-hidden="true">
+        <span class="blob blob--one"></span>
+        <span class="blob blob--two"></span>
+        <span class="blob blob--three"></span>
+      </div>
+
+      <div class="hero__stage">
+
+        <!-- ✏️ EDIT HERE: replace the image placeholder with your own
+             photo. Swap the <div class="hero__photo-placeholder"> for
+             an <img> tag, e.g.
+             <img src="images/profile.jpg" alt="[Your Name] portrait" />
+             Keep the class="hero__photo" on the new element so the
+             sizing/positioning styles still apply. -->
+        <div class="hero__photo">
+          <div class="hero__photo-placeholder" role="img" aria-label="Profile photo placeholder">
+            <span>Add your photo here<br /><small>images/profile.jpg</small></span>
+          </div>
+          <!-- 🎨 FUTURE ANIMATION SLOT: image reveal (clip-path or fade+scale)
+               when the hero first loads. -->
+        </div>
+
+        <!-- ✏️ EDIT HERE: replace with your actual name -->
+        <h1 class="hero__name">[Your Name]</h1>
+
+        <!-- This line is fixed as requested: BTech.ISE -->
+        <p class="hero__degree">BTech.ISE</p>
+
+        <!-- Optional one-line hook. ✏️ EDIT HERE or delete this line. -->
+        <p class="hero__tagline">[A short line about what drives you — write it here]</p>
+
+        <a href="#intro" class="hero__scroll-cue" aria-label="Scroll to introduction">
+          <span class="hero__scroll-cue-line"></span>
+          Scroll
+        </a>
+      </div>
+      <!-- 🎨 FUTURE ANIMATION SLOT: page-load entrance sequence — name
+           fades/slides up first, photo scales in, tagline follows.
+           Hook into the .is-loaded class added by script.js on load. -->
+    </section>
+
+    <!--
+      ============================================================
+      SECTION 2 — SHORT INTRO
+      ============================================================
+      Two-column on desktop (text | image), single column on
+      mobile. Uses CSS Grid with auto-fit-style stacking rather
+      than fixed widths — see ".intro__grid" in style.css.
+    -->
+    <section class="section intro" id="intro">
+      <div class="section__inner intro__grid">
+
+        <div class="intro__text reveal">
+          <p class="eyebrow">Hello, I'm</p>
+          <h2 class="section__heading">A little about me</h2>
+          <!-- ✏️ EDIT HERE: write your real introduction -->
+          <p class="intro__paragraph">
+            [Write your short introduction here — who you are, what you're
+            studying, and what excites you about it. Two or three sentences
+            is plenty.]
+          </p>
+          <!-- ✏️ EDIT HERE: add a second paragraph or delete this one -->
+          <p class="intro__paragraph">
+            [Write a second line here if you'd like — a fun fact, a goal,
+            or what you're currently exploring.]
+          </p>
+        </div>
+
+        <div class="intro__media reveal">
+          <!-- ✏️ EDIT HERE: swap this placeholder for an illustration,
+               a candid photo, or a small graphic that represents you. -->
+          <div class="intro__image-placeholder" role="img" aria-label="Illustration or photo placeholder">
+            <span>Illustration / photo<br /><small>images/intro-graphic.jpg</small></span>
+          </div>
+          <!-- Decorative accent shape behind the media -->
+          <span class="intro__media-glow" aria-hidden="true"></span>
+        </div>
+
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      SECTION 3 — SKILLS & INTERESTS
+      ============================================================
+      Two sub-groups (Skills, Interests), each its own responsive
+      card grid. Grid columns use auto-fit + minmax so the column
+      count adapts automatically — no manual breakpoint juggling
+      per card, one rule handles every screen size.
+    -->
+    <section class="section skills" id="skills">
+      <div class="section__inner">
+
+        <p class="eyebrow reveal">What I bring</p>
+        <h2 class="section__heading reveal">Skills</h2>
+
+        <!-- ✏️ EDIT HERE: replace each [Skill n] with a real skill.
+             Add or remove <li class="card"> blocks freely — the grid
+             reflows automatically regardless of how many there are. -->
+        <ul class="card-grid reveal">
+          <li class="card">
+            <span class="card__icon" aria-hidden="true">◆</span>
+            <h3 class="card__title">[Skill 1]</h3>
+            <p class="card__text">[Short note about this skill — optional]</p>
+            <!-- 🎨 FUTURE ANIMATION SLOT: animated skill-level bar could
+                 go here, e.g. <div class="skill-bar" style="--level:80%"></div> -->
+          </li>
+          <li class="card">
+            <span class="card__icon" aria-hidden="true">◆</span>
+            <h3 class="card__title">[Skill 2]</h3>
+            <p class="card__text">[Short note about this skill — optional]</p>
+          </li>
+          <li class="card">
+            <span class="card__icon" aria-hidden="true">◆</span>
+            <h3 class="card__title">[Skill 3]</h3>
+            <p class="card__text">[Short note about this skill — optional]</p>
+          </li>
+          <li class="card">
+            <span class="card__icon" aria-hidden="true">◆</span>
+            <h3 class="card__title">[Skill 4]</h3>
+            <p class="card__text">[Short note about this skill — optional]</p>
+          </li>
+        </ul>
+
+        <p class="eyebrow reveal skills__interests-eyebrow" id="interests">What I love</p>
+        <h2 class="section__heading reveal">Interests</h2>
+
+        <!-- ✏️ EDIT HERE: replace each [Interest n] with a real interest -->
+        <ul class="card-grid reveal">
+          <li class="card card--soft">
+            <span class="card__icon" aria-hidden="true">✦</span>
+            <h3 class="card__title">[Interest 1]</h3>
+          </li>
+          <li class="card card--soft">
+            <span class="card__icon" aria-hidden="true">✦</span>
+            <h3 class="card__title">[Interest 2]</h3>
+          </li>
+          <li class="card card--soft">
+            <span class="card__icon" aria-hidden="true">✦</span>
+            <h3 class="card__title">[Interest 3]</h3>
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      SECTION 4 — HOBBIES
+      ============================================================
+      Tile layout, visually distinct from the Skills cards (uses
+      the "tile" component with room for an image top and text
+      below). Same auto-fit grid technique so tiles rearrange
+      themselves at any width.
+    -->
+    <section class="section hobbies" id="hobbies">
+      <div class="section__inner">
+
+        <p class="eyebrow reveal">Outside the classroom</p>
+        <h2 class="section__heading reveal">Hobbies</h2>
+
+        <!-- ✏️ EDIT HERE: replace hobby names, descriptions, and swap
+             each .tile__image-placeholder for a real <img> when ready. -->
+        <ul class="tile-grid reveal">
+          <li class="tile">
+            <div class="tile__image-placeholder" role="img" aria-label="Hobby image placeholder">
+              <span>Image</span>
+            </div>
+            <h3 class="tile__title">[Hobby 1]</h3>
+            <p class="tile__text">[Short description]</p>
+          </li>
+          <li class="tile">
+            <div class="tile__image-placeholder" role="img" aria-label="Hobby image placeholder">
+              <span>Image</span>
+            </div>
+            <h3 class="tile__title">[Hobby 2]</h3>
+            <p class="tile__text">[Short description]</p>
+          </li>
+          <li class="tile">
+            <div class="tile__image-placeholder" role="img" aria-label="Hobby image placeholder">
+              <span>Image</span>
+            </div>
+            <h3 class="tile__title">[Hobby 3]</h3>
+            <p class="tile__text">[Short description]</p>
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      SECTION 5 — CONTACT
+      ============================================================
+      Clean, minimal, centered. Social links are optional — remove
+      any <a> you don't need.
+    -->
+    <section class="section contact" id="contact">
+      <div class="section__inner contact__inner">
+
+        <p class="eyebrow reveal">Let's talk</p>
+        <h2 class="section__heading reveal">Get in touch</h2>
+        <p class="contact__lead reveal">
+          [Add a short closing line inviting people to reach out]
+        </p>
+
+        <!-- ✏️ EDIT HERE: replace with your real email and phone -->
+        <div class="contact__details reveal">
+          <a class="contact__detail" href="mailto:your.email@example.com">
+            <span class="contact__detail-label">Email</span>
+            <span class="contact__detail-value">[your.email@example.com]</span>
+          </a>
+          <a class="contact__detail" href="tel:+91XXXXXXXXXX">
+            <span class="contact__detail-label">Phone</span>
+            <span class="contact__detail-value">[+91 XXXXX XXXXX]</span>
+          </a>
+        </div>
+
+        <!-- ✏️ EDIT HERE: add real links, or delete the ones you don't use -->
+        <div class="contact__socials reveal">
+          <a href="#" class="contact__social" aria-label="GitHub profile">GitHub</a>
+          <a href="#" class="contact__social" aria-label="LinkedIn profile">LinkedIn</a>
+          <a href="#" class="contact__social" aria-label="Instagram profile">Instagram</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <!-- ✏️ EDIT HERE: change the name in the footer line too -->
+    <p>Designed &amp; built by [Your Name] · <span id="year"></span></p>
+  </footer>
+
+  <!--
+    ============================================================
+    BACK-TO-TOP BUTTON
+    ============================================================
+    Hidden by default, faded/slid in via .is-visible (toggled by
+    script.js once the user scrolls past the hero).
+  -->
+  <button
+    class="back-to-top"
+    id="backToTop"
+    aria-label="Back to top"
+    title="Back to top"
+  >
+    ↑
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
