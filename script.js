@@ -1,17 +1,5 @@
 /* ================================================================
-   PORTFOLIO SCRIPT
-   ================================================================
-   Small, focused, vanilla JS. Each function does one job:
-
-   1. initMobileNav()      — hamburger open/close + auto-close on link tap
-   2. initScrollProgress() — fills the top progress bar as you scroll
-   3. initBackToTop()      — shows/hides + wires the back-to-top button
-   4. initScrollReveal()   — fades/slides .reveal elements into view
-   5. initFooterYear()     — writes the current year into the footer
-
-   None of this depends on any external library. Everything checks
-   prefers-reduced-motion where relevant so motion-sensitive users
-   still get a fully usable page.
+   PORTFOLIO SCRIPT (WORLD 1 & 2 + ANIMATED CANVAS + TYPEWRITERS)
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -20,10 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initBackToTop();
   initScrollReveal();
   initFooterYear();
+  initWorld1Canvas();
+  initMatrixCanvas();
+  initTerminalTypewriter();
+  initHeadingTypewriter();
 });
 
-/* Shared check: does the user prefer reduced motion? Read once and
-   reused by any function that would otherwise animate something. */
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
@@ -31,12 +21,6 @@ const prefersReducedMotion = window.matchMedia(
 
 /* ----------------------------------------------------------------
    1. MOBILE NAVIGATION
-   ----------------------------------------------------------------
-   Toggles the .is-open class on the menu (CSS handles the actual
-   slide/fade via max-height, see style.css section 16). Also
-   closes the menu automatically after a link is tapped, and
-   keeps the button's aria-expanded state in sync for screen
-   readers.
    ---------------------------------------------------------------- */
 function initMobileNav() {
   const toggle = document.getElementById("navToggle");
@@ -59,13 +43,10 @@ function initMobileNav() {
     isOpen ? closeMenu() : openMenu();
   });
 
-  // Close the menu once a nav link is used, so it doesn't stay open
-  // covering the section the user just navigated to.
   menu.querySelectorAll(".nav__link").forEach((link) => {
     link.addEventListener("click", closeMenu);
   });
 
-  // Close on Escape for keyboard users.
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeMenu();
   });
@@ -74,11 +55,6 @@ function initMobileNav() {
 
 /* ----------------------------------------------------------------
    2. SCROLL PROGRESS BAR
-   ----------------------------------------------------------------
-   Calculates how far the user has scrolled through the whole
-   document (0–100%) and sets that as the bar's width. Uses
-   requestAnimationFrame via a simple "ticking" flag so it never
-   runs more than once per frame, even on very fast scroll events.
    ---------------------------------------------------------------- */
 function initScrollProgress() {
   const bar = document.getElementById("scrollProgress");
@@ -101,16 +77,12 @@ function initScrollProgress() {
     }
   });
 
-  updateBar(); // set the correct value on initial load too
+  updateBar();
 }
 
 
 /* ----------------------------------------------------------------
    3. BACK-TO-TOP BUTTON
-   ----------------------------------------------------------------
-   Fades the button in once the user has scrolled past roughly one
-   viewport (i.e. past the hero), and scrolls smoothly back to the
-   top when clicked.
    ---------------------------------------------------------------- */
 function initBackToTop() {
   const button = document.getElementById("backToTop");
@@ -136,22 +108,11 @@ function initBackToTop() {
 
 /* ----------------------------------------------------------------
    4. SCROLL-REVEAL ANIMATION
-   ----------------------------------------------------------------
-   Uses IntersectionObserver (not scroll-event math) to add
-   .is-visible to each .reveal element the first time it enters
-   the viewport, matching the CSS fade/slide-up transition defined
-   in style.css section 14. Each element is only revealed once —
-   we unobserve it right after, since re-hiding content that
-   scrolls back offscreen tends to feel gimmicky rather than
-   polished.
    ---------------------------------------------------------------- */
 function initScrollReveal() {
   const revealEls = document.querySelectorAll(".reveal");
   if (!revealEls.length) return;
 
-  // If the browser has no IntersectionObserver support (very rare
-  // today) or the user prefers reduced motion, just show everything
-  // immediately rather than risking content staying hidden.
   if (!("IntersectionObserver" in window) || prefersReducedMotion) {
     revealEls.forEach((el) => el.classList.add("is-visible"));
     return;
@@ -178,9 +139,6 @@ function initScrollReveal() {
 
 /* ----------------------------------------------------------------
    5. FOOTER YEAR
-   ----------------------------------------------------------------
-   Small nicety so the footer's copyright-style line never goes
-   stale — it always reflects the visitor's current year.
    ---------------------------------------------------------------- */
 function initFooterYear() {
   const yearEl = document.getElementById("year");
@@ -189,18 +147,310 @@ function initFooterYear() {
   }
 }
 
-/* ================================================================
-   FUTURE ADDITIONS — suggested hooks (not implemented yet)
-   ================================================================
-   - Hero load-in sequence: add a `window.addEventListener("load", ...)`
-     that adds a `.is-loaded` class to <body>, then animate
-     .hero__name / .hero__photo / .hero__tagline off that class in CSS.
-   - Parallax on the decorative .blob shapes using scroll position or
-     mousemove (keep it subtle, and skip entirely when
-     prefersReducedMotion is true).
-   - Animated skill bars: observe .skill-bar elements the same way
-     initScrollReveal() does, and set their width from a data-level
-     attribute when they enter view.
-   - Custom cursor or hover "spotlight" effect for .card / .tile using
-     mousemove + CSS custom properties (--x, --y).
-   ================================================================ */
+
+/* ----------------------------------------------------------------
+   6. WORLD 1 BACKGROUND ANIMATION (Peach, Flowers, Soft Particles)
+   ---------------------------------------------------------------- */
+/* function initWorld1Canvas() {
+  const canvas = document.getElementById("world1Canvas");
+  if (!canvas || prefersReducedMotion) return;
+  const ctx = canvas.getContext("2d");
+
+  let width, height;
+  const resize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  };
+  window.addEventListener("resize", resize);
+  resize();
+
+  // Floating symbols/particles
+  const symbols = [ "🍓", "🌸", "✨", "🌷"];
+  const particles = Array.from({ length: 22 }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * (height * 0.55), // only in World 1 / transition area
+    size: Math.random() * 14 + 10,
+    speedY: (Math.random() * 0.4 + 0.2) * 0.8,
+    speedX: (Math.random() - 0.5) * 0.3,
+    char: symbols[Math.floor(Math.random() * symbols.length)],
+    opacity: Math.random() * 0.35 + 0.15
+  }));
+
+  const animate = () => {
+    ctx.clearRect(0, 0, width, height);
+
+    if (window.scrollY < height * 0.7) { // only animate when near top
+      particles.forEach(p => {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        if (p.y < -50) p.y = height * 0.6;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+
+        ctx.globalAlpha = p.opacity;
+        ctx.font = `${p.size}px serif`;
+        ctx.fillText(p.char, p.x, p.y);
+      });
+    }
+    requestAnimationFrame(animate);
+  };
+  animate();
+}*/
+
+
+/* ----------------------------------------------------------------
+   7. WORLD 2 MATRIX BACKGROUND ANIMATION
+   ---------------------------------------------------------------- */
+/*function initMatrixCanvas() {
+  const canvas = document.getElementById("matrixCanvas");
+  if (!canvas || prefersReducedMotion) return;
+  const ctx = canvas.getContext("2d");
+
+  let width, height;
+  const resize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  };
+  window.addEventListener("resize", resize);
+  resize();
+
+  const chars = "01010101XYZ#<>[]{}SYS_ROOT_LV";
+  const fontSize = 14;
+  let columns = Math.floor(width / fontSize);
+  let drops = Array(columns).fill(1);
+
+  const draw = () => {
+    ctx.fillStyle = "rgba(13, 17, 23, 0.15)";
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = "#00ff66";
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars.charAt(Math.floor(Math.random() * chars.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  };
+
+  setInterval(draw, 40);
+}*/
+
+/* ----------------------------------------------------------------
+   6. WORLD 1 BACKGROUND ANIMATION (Peach, Flowers, Soft Particles)
+   ---------------------------------------------------------------- */
+function initWorld1Canvas() {
+  const canvas = document.getElementById("world1Canvas");
+  if (!canvas || prefersReducedMotion) return;
+  const ctx = canvas.getContext("2d");
+
+  let width, height;
+  const resize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  };
+  window.addEventListener("resize", resize);
+  resize();
+
+  const symbols = [ "🍓", "🌸", "✨", "🌷"];
+  const particles = Array.from({ length: 20 }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    size: Math.random() * 14 + 10,
+    speedY: (Math.random() * 0.4 + 0.2) * 0.8,
+    speedX: (Math.random() - 0.5) * 0.3,
+    char: symbols[Math.floor(Math.random() * symbols.length)],
+    opacity: Math.random() * 0.35 + 0.15
+  }));
+
+  const animate = () => {
+    ctx.clearRect(0, 0, width, height);
+
+    // Only draw World 1 animation while user is in World 1 / Transition
+    const terminalBreak = document.getElementById("terminal-break");
+    const breakTop = terminalBreak ? terminalBreak.offsetTop : height * 1.5;
+
+    if (window.scrollY < breakTop + 200) {
+      particles.forEach(p => {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        if (p.y < -50) p.y = height;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+
+        ctx.globalAlpha = p.opacity;
+        ctx.font = `${p.size}px serif`;
+        ctx.fillText(p.char, p.x, p.y);
+      });
+    }
+    requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+
+/* ----------------------------------------------------------------
+   7. WORLD 2 MATRIX BACKGROUND ANIMATION
+   ---------------------------------------------------------------- */
+function initMatrixCanvas() {
+  const canvas = document.getElementById("matrixCanvas");
+  if (!canvas || prefersReducedMotion) return;
+  const ctx = canvas.getContext("2d");
+
+  let width, height;
+  const resize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  };
+  window.addEventListener("resize", resize);
+  resize();
+
+  const chars = "01010101XYZ#<>[]{}SYS_ROOT_LV";
+  const fontSize = 14;
+  let columns = Math.floor(width / fontSize);
+  let drops = Array(columns).fill(1);
+
+  const draw = () => {
+    ctx.fillStyle = "rgba(13, 17, 23, 0.2)";
+    ctx.fillRect(0, 0, width, height);
+
+    // Only run matrix rain when user scrolls down to World 2
+    const terminalBreak = document.getElementById("terminal-break");
+    const breakTop = terminalBreak ? terminalBreak.offsetTop : height;
+
+    if (window.scrollY >= breakTop - 100) {
+      ctx.fillStyle = "#00ff66";
+      ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+  };
+
+  setInterval(draw, 40);
+}
+
+
+/* ----------------------------------------------------------------
+   8. TERMINAL TYPEWRITER EFFECT
+   ---------------------------------------------------------------- */
+function initTerminalTypewriter() {
+  const container = document.getElementById("typewriterTerminal");
+  if (!container || prefersReducedMotion) return;
+
+  const lines = [
+    "> SYSTEM_SWITCH: EXECUTING...",
+    "> UNLOCKING KERNEL MODE...",
+    "> WELCOME TO WORLD_02"
+  ];
+
+  let lineIdx = 0;
+  let charIdx = 0;
+  let started = false;
+
+  const typeLine = () => {
+    if (lineIdx >= lines.length) return;
+
+    if (charIdx === 0) {
+      const p = document.createElement("p");
+      p.className = "terminal__line";
+      if (lineIdx === lines.length - 1) {
+        p.classList.add("terminal__line--highlight");
+      }
+      container.appendChild(p);
+    }
+
+    const currentP = container.lastElementChild;
+    const currentText = lines[lineIdx];
+
+    if (charIdx < currentText.length) {
+      currentP.textContent += currentText.charAt(charIdx);
+      charIdx++;
+      setTimeout(typeLine, 35);
+    } else {
+      if (lineIdx === lines.length - 1) {
+        const cursor = document.createElement("span");
+        cursor.className = "terminal__cursor";
+        cursor.textContent = "_";
+        currentP.appendChild(cursor);
+      }
+      lineIdx++;
+      charIdx = 0;
+      setTimeout(typeLine, 300);
+    }
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !started) {
+        started = true;
+        setTimeout(typeLine, 200);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(container);
+}
+
+
+/* ----------------------------------------------------------------
+   9. SECTION HEADINGS TYPEWRITER EFFECT
+   ---------------------------------------------------------------- */
+function initHeadingTypewriter() {
+  const headings = document.querySelectorAll(".type-heading");
+  if (!headings.length || prefersReducedMotion) return;
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const h = entry.target;
+        const text = h.getAttribute("data-text");
+        h.textContent = "";
+        let i = 0;
+
+        const type = () => {
+          if (i < text.length) {
+            h.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, 50);
+          } else {
+            // add subtle terminal cursor
+            const cursor = document.createElement("span");
+            cursor.className = "terminal__cursor";
+            cursor.textContent = "_";
+            h.appendChild(cursor);
+          }
+        };
+        type();
+        obs.unobserve(h);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  headings.forEach(h => observer.observe(h));
+}
+
+const glow = document.getElementById("cursorGlow");
+window.addEventListener("mousemove", (e) => {
+  glow.style.left = `${e.clientX}px`;
+  glow.style.top = `${e.clientY}px`;
+});
+window.addEventListener("scroll", () => {
+  const breakEl = document.getElementById("terminal-break");
+  if (window.scrollY >= breakEl.offsetTop - 200) {
+    document.body.classList.add("in-world-two");
+  } else {
+    document.body.classList.remove("in-world-two");
+  }
+});
